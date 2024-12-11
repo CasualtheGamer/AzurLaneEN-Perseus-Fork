@@ -23,11 +23,6 @@ jobs:
           build-tools: '31.0.0'
           ndk: false
 
-      - name: Verify Build Tools Installation
-        run: |
-          echo "Checking installed build tools:"
-          ls $ANDROID_HOME/build-tools/31.0.0/
-
       - name: Build Perseus APK
         run: ./patch_perseus.sh
 
