@@ -8,26 +8,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3.3.0
+    # Step 1: Checkout the Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+  
+      # Step 2: Set up JDK for Android Build
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          java-version: "17"
-          distribution: "adopt"
-
+          distribution: 'zulu'
+          java-version: '11'
+  
+      # Step 3: Install Android SDK with Build Tools 32.0.0
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
         with:
           api-level: 31
           build-tools: '32.0.0'
           ndk: false
+  
+      # Step 4: Debug Installed Build Tools
+      - name: Debug Installed Build Tools
+        run: |
+          echo "Available build-tools versions:"
+          ls $ANDROID_HOME/build-tools/
 
       - name: Build Perseus APK
         run: ./patch_perseus.sh
-
-      - name: Grant Execute Permission
-        run: chmod +x ./zipalign_sign.sh
 
       - name: Zipalign and Sign Android release
         run: ./zipalign_sign.sh
