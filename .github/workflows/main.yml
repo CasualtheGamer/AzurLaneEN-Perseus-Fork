@@ -7,6 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: ${{ runner.tool_cache }}/android-sdk
+
     steps:
       - uses: actions/checkout@v3
       
@@ -23,11 +26,16 @@ jobs:
           build-tools: '31.0.0'
           ndk: false
 
-      - name: Grant Execute Permission
-        run: chmod +x ./zipalign_sign.sh
+      - name: Verify Build Tools Installation
+        run: |
+          echo "Checking installed build tools:"
+          ls $ANDROID_HOME/build-tools/31.0.0/
 
       - name: Build Perseus APK
         run: ./patch_perseus.sh
+
+      - name: Grant Execute Permission
+        run: chmod +x ./zipalign_sign.sh
 
       - name: Zipalign and Sign Android release
         run: ./zipalign_sign.sh
